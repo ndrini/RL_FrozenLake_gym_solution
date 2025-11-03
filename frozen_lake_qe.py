@@ -55,8 +55,8 @@ def run(episodes, is_training=True, render=False):
 
             # pass the q table and episode count to the environment for rendering
             if(env.render_mode=='human'):
-                env.set_q(q)
-                env.set_episode(i)
+                env.unwrapped.set_q(q)
+                env.unwrapped.set_episode(i)
 
             state = new_state
 
@@ -83,4 +83,4 @@ def run(episodes, is_training=True, render=False):
 
 if __name__ == '__main__':
 
-    run(15000, is_training=True, render=True)
+    run(50, is_training=False, render=True)
