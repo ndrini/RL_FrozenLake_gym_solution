@@ -1,3 +1,5 @@
+import argparse
+import os
 import pickle
 
 import matplotlib.pyplot as plt
@@ -116,3 +118,60 @@ def plot_rewards(rewards_per_episode, episodes, filepath):
         sum_rewards[t] = np.sum(rewards_per_episode[max(0, t - 100) : (t + 1)])
     plt.plot(sum_rewards)
     plt.savefig(filepath)
+
+
+def parse_arguments():
+    """
+    Parses command line arguments.
+    """
+    parser = argparse.ArgumentParser(
+        description="Esegue il training o il test dell'agente Q-Learning per FrozenLake."
+    )
+    parser.add_argument(
+        "mode",
+        choices=["train", "exec"],
+        help="Modalità di esecuzione: 'train' per addestrare un nuovo modello, 'exec' per eseguire un modello salvato.",
+    )
+    parser.add_argument(
+        "--file",
+        type=str,
+        default=None,
+        help="[Solo per 'exec'] Percorso del file .pkl da caricare. Se non specificato, carica il più recente.",
+    )
+    return parser.parse_args()
+
+
+def find_latest_model(directory="model_results", prefix=None):
+    """
+    Trova il file del modello (.pkl) più recente in una cartella, opzionalmente filtrando per prefisso.
+    Finds the most recent model file (.pkl) in a directory, optionally filtering by a prefix.
+
+    Args:
+        directory (str): La cartella in cui cercare.
+                         The directory to search in.
+        prefix (str, optional): Prefisso per identificare i file (es. 'frozen_lake').
+                                Prefix to identify files (e.g., 'frozen_lake').
+
+    Returns:
+        str: Il percorso del file più recente, o None se non trovato.
+             The path to the latest file, or None if not found.
+    """
+    if not os.path.isdir(directory) or not os.listdir(directory):
+        print(
+            f"Errore: La cartella '{directory}' è vuota o non esiste. Esegui prima il training."
+        )
+        return None
+
+    files = [
+        os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".pkl")
+    ]
+    if prefix:
+        files = [f for f in files if os.path.basename(f).startswith(prefix)]
+
+    if not files:
+        print(
+            f"Errore: Nessun file .pkl con prefisso '{prefix}' trovato in '{directory}'."
+        )
+        return None
+
+    return max(files, key=os.path.getctime)
