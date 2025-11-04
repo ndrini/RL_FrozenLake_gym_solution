@@ -20,12 +20,16 @@ In sintesi, è il "motore" del gioco che l'agente dovrà imparare a risolvere, m
 Ruolo: Questo è lo script che contiene la logica dell'agente, ovvero l'implementazione dell'algoritmo di Q-Learning.
 
 Cosa fa:
-Inizializza la Q-table: Crea una tabella (matrice) numpy dove le righe rappresentano gli stati (le 64 caselle) e le colonne le 4 azioni possibili (su, giù, sinistra, destra).
-Ciclo di Training: Esegue il training per un certo numero di episodes. In ogni episodio, l'agente esplora l'ambiente.
-Applica la formula di Q-Learning: Dopo ogni azione, aggiorna il valore Q nella tabella usando la famosa equazione di Bellman, che bilancia la ricompensa immediata con la massima ricompensa futura attesa.
-Epsilon-Greedy: Gestisce il compromesso tra esplorazione (provare azioni a caso per scoprire nuove strategie) e sfruttamento (usare l'azione migliore conosciuta finora).
-Interagisce con l'ambiente: Chiama env.unwrapped.set_q(q) per passare la Q-table aggiornata all'ambiente frozen_lake_enhanced.py, che si occuperà di visualizzarla.
+- Inizializza la Q-table: Crea una tabella (matrice) numpy dove le righe rappresentano gli stati (le 64 caselle) e le colonne le 4 azioni possibili (su, giù, sinistra, destra).
+- Ciclo di Training: Esegue il training per un certo numero di episodes. In ogni episodio, l'agente esplora l'ambiente.
+- Applica la formula di Q-Learning: Dopo ogni azione, aggiorna il valore Q nella tabella usando la famosa equazione di Bellman, che bilancia la ricompensa immediata con la massima ricompensa futura attesa.
+- Epsilon-Greedy: Gestisce il compromesso tra esplorazione (provare azioni a caso per scoprire nuove strategie) e sfruttamento (usare l'azione migliore conosciuta finora).
+- Interagisce con l'ambiente: Chiama env.unwrapped.set_q(q) per passare la Q-table aggiornata all'ambiente frozen_lake_enhanced.py, che si occuperà di visualizzarla.
+
 In sintesi, è il "cervello" dell'agente che impara a giocare.
+
+Nel codice di frozen_lake_qe.py, gym (o gymnasium) viene utilizzato principalmente per definire e interagire con l'ambiente di simulazione (in questo caso, FrozenLake). Tuttavia, gym non è direttamente coinvolto nella risoluzione del problema o nell'implementazione dell'algoritmo di Q-Learning. La risoluzione del problema avviene tramite il tuo codice Python, che implementa l'algoritmo di Q-Learning.
+
 
 
 ## frozen_lake8x8.pkl: Il Modello Salvato.
@@ -38,7 +42,7 @@ README.md: Il file di documentazione principale del progetto.
 
 LICENSE: La licenza del software (MIT).
 
-## .venpyproject.toml e uv.lock
+## .venv pyproject.toml e uv.lock
 
 File di configurazione del progetto Python. Definiscono le dipendenze (gymnasium, matplotlib, pygame) e bloccano le loro versioni per garantire che il progetto funzioni allo stesso modo su macchine diverse.
 
