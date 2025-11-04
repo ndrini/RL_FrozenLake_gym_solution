@@ -80,7 +80,7 @@ def generate_random_map(
         board = np_random.choice(["F", "H"], (size, size), p=[p, 1 - p])
         board[0][0] = "S"
         board[-1][-1] = "G"
-        valid = is_valid(board, size)
+        valid = is_valid(board.tolist(), size)
     return ["".join(x) for x in board]
 
 
@@ -307,12 +307,12 @@ class FrozenLakeEnv(Env):
         self.pygame_initialized = False    # flag to determine if pygame has been initialized
         self.text_padding = 5
 
-    def step(self, a):
-        transitions = self.P[self.s][a]
+    def step(self, action):
+        transitions = self.P[int(self.s)][action]
         i = categorical_sample([t[0] for t in transitions], self.np_random)
         p, s, r, t = transitions[i]
         self.s = s
-        self.lastaction = a
+        self.lastaction = action
 
         if self.pygame_initialized:
             # Process user events, key presses

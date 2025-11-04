@@ -4,6 +4,8 @@ import gymnasium as gym
 import numpy as np
 import matplotlib.pyplot as plt
 import pickle
+from gymnasium.spaces import Discrete
+
 
 # Register the enhanced frozen lake environment
 # Sample of registration entry found in C:\Users\<username>\.conda\envs\gymenv\Lib\site-packages\gymnasium\envs\__init__.py
@@ -15,13 +17,31 @@ gym.register(
     reward_threshold=0.85,  # optimum = 0.91
 )
 
+"""
+gym.register(...): Dice a Gymnasium: "Ehi, ho creato un ambiente personalizzato! Se qualcuno chiede di creare un ambiente con l'ID 'FrozenLake-enhanced', tu devi andare a cercare la classe FrozenLakeEnv nel file frozen_lake_enhanced.py".
+max_episode_steps=200: Imposta un limite di 200 azioni per ogni partita. Se l'agente non raggiunge l'obiettivo o non cade in un buco entro 200 passi, la partita finisce (questo si chiama truncation).
+
+id: Un identificatore univoco per l'ambiente.
+entry_point: Il percorso al file Python che definisce l'ambiente personalizzato. In questo caso, il file si chiama frozen_lake_enhanced.py e contiene la classe FrozenLakeEnv.
+kwargs: Argomenti aggiuntivi per la creazione dell'ambiente. Qui, map_name="8x8" specifica che la mappa del labirinto è di dimensioni 8x8.
+max_episode_steps: Il numero massimo di passi per episodio. Dopo 200 passi, l'episodio viene interrotto.
+reward_threshold: La soglia di ricompensa considerata ottimale. In questo caso, una politica che ottiene una ricompensa media di 0.85 è considerata ottimale.
+
+"""
+
+
 def run(episodes, is_training=True, render=False):
+    """ 
+    """
 
     # 'FrozenLake-enhanced' is the id specified above
     env = gym.make('FrozenLake-enhanced', desc=None, map_name="8x8", is_slippery=True, render_mode='human' if render else None)
 
-    if(is_training):
-        q = np.zeros((env.observation_space.n, env.action_space.n)) # init a 64 x 4 array
+    if(is_training):  # training mode
+        if isinstance(env.observation_space, Discrete) and isinstance(env.action_space, Discrete):
+            q = np.zeros((env.observation_space.n, env.action_space.n)) # init a 64 × 4 array
+        else: # type: ignore
+            raise ValueError("Observation space is not discrete. Q-learning requires a discrete observation space.")
     else:
         f = open('frozen_lake8x8.pkl', 'rb')
         q = pickle.load(f)
@@ -30,7 +50,7 @@ def run(episodes, is_training=True, render=False):
     learning_rate_a = 0.9 # alpha or learning rate
     discount_factor_g = 0.9 # gamma or discount rate. Near 0: more weight/reward placed on immediate state. Near 1: more on future state.
     epsilon = 1         # 1 = 100% random actions
-    epsilon_decay_rate = 0.0001        # epsilon decay rate. 1/0.0001 = 10,000
+    epsilon_decay_rate = 0.0001        # epsilon decay rate. 1/0.0001 = 10_000
     rng = np.random.default_rng()   # random number generator
 
     rewards_per_episode = np.zeros(episodes)
@@ -46,7 +66,7 @@ def run(episodes, is_training=True, render=False):
             else:
                 action = np.argmax(q[state,:])
 
-            new_state,reward,terminated,truncated,_ = env.step(action)
+            new_state, reward, terminated, truncated, _ = env.step(action)
 
             if is_training:
                 q[state,action] = q[state,action] + learning_rate_a * (
@@ -70,6 +90,10 @@ def run(episodes, is_training=True, render=False):
 
     env.close()
 
+    """
+    7. Visualizzazione e Salvataggio dei Risultati
+    Alla fine dell'apprendimento, i risultati vengono visualizzati e salvati:
+    """
     sum_rewards = np.zeros(episodes)
     for t in range(episodes):
         sum_rewards[t] = np.sum(rewards_per_episode[max(0, t-100):(t+1)])

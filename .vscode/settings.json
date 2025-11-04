@@ -1,0 +1,26 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": null,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit" // isort
+    }
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[csv]": {
+    "editor.defaultFormatter": "mechatroner.rainbow-csv"
+  },
+  "cSpell.words": ["ndarray"],
+  "cSpell.enabled": true,
+  "cSpell.language": "es,en,it",
+  "cSpell.dictionaries": ["spanish", "english", "italian"],
+  "python.testing.pytestArgs": ["tests"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
+}
