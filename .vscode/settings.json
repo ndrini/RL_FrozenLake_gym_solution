@@ -16,7 +16,7 @@
   "[csv]": {
     "editor.defaultFormatter": "mechatroner.rainbow-csv"
   },
-  "cSpell.words": ["ndarray"],
+  "cSpell.words": ["ndarray", "numpy"],
   "cSpell.enabled": true,
   "cSpell.language": "es,en,it",
   "cSpell.dictionaries": ["spanish", "english", "italian"],
