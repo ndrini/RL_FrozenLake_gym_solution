@@ -1,4 +1,5 @@
 import argparse
+import csv
 import os
 import pickle
 
@@ -175,3 +176,34 @@ def find_latest_model(directory="model_results", prefix=None):
         return None
 
     return max(files, key=os.path.getctime)
+
+
+def log_training_results(log_filepath, data_dict):
+    """
+    Registra i risultati di un'esecuzione di training in un file CSV.
+    Logs the results of a training run to a CSV file.
+
+    Args:
+        log_filepath (str): Percorso del file CSV di log.
+        data_dict (dict): Dizionario contenente i dati da registrare.
+    """
+    # Controlla se il file esiste per decidere se scrivere l'intestazione
+    file_exists = os.path.isfile(log_filepath)
+
+    try:
+        with open(log_filepath, mode="a", newline="", encoding="utf-8") as csvfile:
+            # Le chiavi del dizionario saranno le intestazioni delle colonne
+            fieldnames = data_dict.keys()
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            # Scrive l'intestazione solo se il file è nuovo
+            if not file_exists:
+                writer.writeheader()
+
+            # Scrive la riga di dati
+            writer.writerow(data_dict)
+
+        print(f"Risultati del training registrati in: {log_filepath}")
+
+    except IOError as e:
+        print(f"Errore durante la scrittura del file di log: {e}")
